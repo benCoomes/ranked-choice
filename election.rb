@@ -10,8 +10,10 @@ class Election
             if line_num == 0
                 candidates = line.split(',').map(&:strip)
             else
-                ranks = line.split(',').map { |raw_rank| raw_rank.strip.to_i }
+                ranks = line.split(',')
+                  .map { |raw_rank| raw_rank.strip.to_i }
                 hash = candidates.zip(ranks).to_h
+                hash.reject! { |_, rank| rank == 0 } # remove votes where no preference (assuming 0 is from empty column)
                 votes.push(Vote.new(hash))
             end
         end
